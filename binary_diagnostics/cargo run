@@ -1,0 +1,50 @@
+use std::fs;
+
+fn main() {
+    let mut bits = Vec::new();
+    let input = fs::read_to_string("input.txt").expect("Failed to read input.txt");
+    input.lines().for_each(|line| {
+        bits.push(line);
+    });
+    let mut oxygen = 0;
+    let mut co2 = 0;
+    let mut binary = String::new();
+    for i in 0..12 {
+        let mut ones = 0;
+        let mut zeros = 0;
+        for j in 0..bits.len() {
+            // println!("{}", bits[j]);
+            if bits[j].chars().nth(i) != Some('0') {
+                ones += 1;
+            } else {
+                zeros += 1;
+            }
+        }
+        if ones >= zeros {
+            binary.push('1');
+            oxygen = oxygen << 1 | 1;
+            co2 = co2 << 1 | 0;
+        } else {
+            binary.push('0');
+            oxygen = oxygen << 1 | 0;
+            co2 = co2 << 1 | 1;
+        }
+    }
+
+    let lastfound = String::new();
+    for i in 0..binary.len() {
+        let found = false;
+        for j in bits {
+            if j.contains(binary[0..i]) {
+                found = true;
+                lastfound = j.toString();
+            }
+        }
+        if !found {
+            break;
+        }
+    }
+    println!("{}", lastfound);
+
+    println!("{}", oxygen * co2);
+}
